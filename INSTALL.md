@@ -16,10 +16,10 @@ Il en existe plusieurs mais nous nous appuyerons sur la distribution [Miniconda]
     * pour Mac OS, télécharger [Miniconda3 MacOSX 64-bit pkg](https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.pkg)
     * pour Linux, télécharger [Miniconda3 Linux 64-bit](https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh)
 1. Installer Miniconda
-    * pour Windows, double-cliquer sur le fichier `.exe` téléchargé précédemment puis accepter les choix par défaut **sauf à la dernière étape** :
+    * pour Windows, double-cliquer sur le fichier `.exe` téléchargé précédemment puis suivez la procédure suivante :
       - accepter la licence ("I Agree")
       - "Install for", "Just Me (recommended)" ("Next")
-      - "Choose Install Location", ("Next")
+      - "Choose Install Location", Si votre nom d'utilisateur Windows contient des accents (par exemple C:\Users\Théo) **choisissez un autre répertoire d'installation** (par exemple C:\Users\Public), ("Next")
       - "Register Miniconda3 as my default Python 3.9", ("Install")
       - "Installation Complete", ("Next")
       - "Completing Miniconda3...", **décocher tout** ("Finish")
@@ -166,7 +166,7 @@ Cependant, cette dernière s'appuie sur l'outil en ligne de commande `git` que n
     - "Choosing HTTPS transport backend", déjà sélectionné "Use the OpenSSL library" ("Next")
     - "Configuring the line ending conversions", déjà sélectionné "Checkout Windows-style, commit Unix-style line endings" ("Next")
     - "Configuring the terminal emulator to use with Git Bash", déjà sélectionné "Use MinTTY (the default terminal of MSYS2)" ("Next")
-    - "Choose the default behavior of 'git pull'", déjà sélectionné "Default (fast-forward or merge)" ("Next")
+    - "Choose the default behavior of 'git pull'", "Default (fast-forward or merge)" ("Next")
     - "Choose a credentiel helper", **choisir "None"**("Next")
     - "Configuring extra options", "Enable file system caching" (déjà sélectionné) et "Enable symbolic links" ("Next")
     - "Configuring experimental options", rien n'est sélectionné ("Install")
@@ -216,8 +216,8 @@ Cela nous permettra également d'en finaliser l'installation en ajoutant les ext
 ### Création d'une copie locale du projet
 1. Lancer VSCode
 1. Cliquer sur l'icone en forme de graphe à 3 noeuds à gauche de l'écran (*Source Control* ou *Ctrl+Shift+G*)
-1. Cliquer sur le bouton "Clone Repository" à gauche de l'écran ou *Ctrl+Shift+P* puis sélectionner "Clone from Github"
-1. Cliquez sur "Allow" dans la boite de dialogue puis accepter les différents choix proposés dans le navigateur ou dans une boite de dialogue VSCode (le navigateur doit être celui où le fork a été fait dans votre espace personnel github)
+1. Sélectionner "Clone from Github"
+1. Cliquez sur "Allow" dans la boite de dialogue puis accepter les différents choix proposés dans le navigateur ou dans une boite de dialogue VSCode (le navigateur doit être celui où le fork a été fait dans votre espace personnel github). 
 1. Sélectionner le dépôt "uvsqXXXXXXXX/l1-python" dans la liste déroulante puis choisissez l'emplacement local du projet
 1. Ouvrir ensuite le répertoire créé ci-dessus
 
@@ -234,18 +234,28 @@ Cette étape précise à VSCode quel *shell* utiliser pour le terminal.
 Pour isoler l'environnement du projet d'éventuelles autres versions de Python ou de bibliothèques, nous allons créer un environnement `conda` spécifique.
 
 * Sous Windows, `conda` n'est pas accessible dans le "Command Prompt". Pour palier ce problème, faire *Ctrl ,* (Ctrl et virgule en même temps), rechercher "terminal.integrated.profiles.windows" et cliquer sur "Edit in settings.json".
-    Modifier le contenu de la partie Command Prompt en remplissant "args" comme ceci :
+    Supprimer l'intégralité du contenu du fichier et copier-coller ceci à la place:
     ```json
-    "Command Prompt": {
-      "path": [
-          "${env:windir}\\Sysnative\\cmd.exe",
-          "${env:windir}\\System32\\cmd.exe"
-      ],
-      "args":["/K", "C:\\Users\\VOTRENOMDUTILISATEUR\\miniconda3\\Scripts\\activate.bat C:\\Users\\VOTRENOMDUTILISATEUR\\miniconda3"],
-      "icon": "terminal-cmd"
-    },
+    {
+        "terminal.integrated.profiles.windows": {
+            "Command Prompt": {
+                "path": [
+                    "${env:windir}\\Sysnative\\cmd.exe",
+                    "${env:windir}\\System32\\cmd.exe"
+                ],
+                "args":["/K", "C:\\Users\\${env:USERNAME}\\miniconda3\\Scripts\\activate.bat C:\\Users\\${env:USERNAME}\\miniconda3"],
+                "icon": "terminal-cmd"
+            }
+        },
+        "terminal.integrated.defaultProfile.windows": "Command Prompt"
+    }
     ```
-    **Remplacer VOTRENOMDUTILISATEUR par le nom de votre utilisateur.**
+
+    Ce qui revient à taper:
+    ```
+    [« /k », « C:\\users\\moi\\miniconda3\\Scripts\\activate.bat C: C:\\users\\moi\\miniconda3] 
+    ```
+    dans le « args » du bloc « Command Prompt »
     Si le répertoire par défaut pour installer miniconda n'a pas été choisi, adapter le chemin d'installation.
     Enfin, utiliser *File/Save* ou Ctrl+S pour sauvegarder vos modifications puis fermer l'onglet settings.json.
 1. Sous Windows, Mac et Linux s'assurer que le répertoire du projet est ouvert dans VSCode puis ouvrir un terminal (menu Terminal/New Terminal ou View/Terminal).
